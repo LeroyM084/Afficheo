@@ -42,6 +42,12 @@ body {
     width: auto;
 }
 
+.campus-logo-placeholder {
+    font-size: 2em;
+    margin-right: 10px;
+    display: inline-block;
+}
+
 .campus-name {
     font-size: 1.5em;
     font-weight: 600;
@@ -80,6 +86,11 @@ body {
     display: block;
     font-size: 1em;
     opacity: 0.8;
+}
+
+.campus-info {
+    display: flex;
+    align-items: center;
 }
 
 /* Zone principale */
@@ -887,4 +898,200 @@ body {
 
 .fullscreen-message.show {
     opacity: 1;
+}
+
+/* Style pour RoyalSlider */
+.royalSlider {
+    width: 100%;
+    height: 100%;
+}
+
+.slide-default {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.default-content {
+    text-align: center;
+    padding: 40px;
+}
+
+.default-content h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.default-content p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* === ROYAL SLIDER CUSTOMIZATION === */
+#announcement-slider {
+    width: 100%;
+    height: 100vh;
+}
+
+.announcement-slide {
+    width: 100%;
+    height: 100%;
+}
+
+.slide-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* Layouts */
+.layout-text-only .text-container {
+    text-align: center;
+    max-width: 800px;
+}
+
+.layout-image-left {
+    flex-direction: row;
+    gap: 40px;
+}
+
+.layout-image-right {
+    flex-direction: row-reverse;
+    gap: 40px;
+}
+
+.layout-image-left .image-container,
+.layout-image-right .image-container {
+    flex: 0 0 40%;
+    max-width: 500px;
+}
+
+.layout-image-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.layout-image-background .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.layout-image-background .text-container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.placeholder-image {
+    width: 100%;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    opacity: 0.5;
+}
+
+/* Typography */
+.slide-title {
+    font-size: 3.5em;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    line-height: 1.2;
+}
+
+.slide-description {
+    font-size: 1.4em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Meta info */
+.slide-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.new-badge,
+.priority-badge,
+.location-badge {
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.new-badge {
+    background: #4CAF50;
+    color: white;
+}
+
+.priority-badge.urgence {
+    background: #FF5722;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.location-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slide-content {
+        padding: 20px;
+    }
+    
+    .layout-image-left,
+    .layout-image-right {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .slide-title {
+        font-size: 2.5em;
+    }
+    
+    .slide-description {
+        font-size: 1.2em;
+    }
 }

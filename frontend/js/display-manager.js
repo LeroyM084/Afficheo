@@ -342,15 +342,18 @@ class DisplayManager {
     }
     
     showNoAnnouncementsMessage() {
+        // Vérifier si l'élément existe avant de le modifier
         const container = document.getElementById('announcement-container');
-        container.innerHTML = `
-            <div class="no-announcements">
-                <div class="no-announcements-icon">📢</div>
-                <h2>Aucune annonce à afficher</h2>
-                <p>Connectez-vous en mode administrateur pour ajouter des annonces</p>
-                <small>Appuyez sur Ctrl+A pour accéder à l'administration</small>
-            </div>
-        `;
+        if (container) {
+            container.innerHTML = `
+                <div class="no-announcements">
+                    <div class="no-announcements-icon">📢</div>
+                    <h2>Aucune annonce à afficher</h2>
+                    <p>Connectez-vous en mode administrateur pour ajouter des annonces</p>
+                    <small>Appuyez sur Ctrl+A pour accéder à l'administration</small>
+                </div>
+            `;
+        }
     }
     
     startClock() {

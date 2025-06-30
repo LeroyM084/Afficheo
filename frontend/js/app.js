@@ -65,40 +65,43 @@ class DisplaySystem {
     
     setupEventListeners() {
         // Navigation admin
-        document.querySelectorAll('.admin-nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = e.target.dataset.section;
-                if (section) {
-                    this.switchAdminSection(section);
-                }
+        const adminNavLinks = document.querySelectorAll('.admin-nav a');
+        if (adminNavLinks.length) {
+            adminNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = e.target.dataset.section;
+                    if (section) {
+                        this.switchAdminSection(section);
+                    }
+                });
             });
-        });
-        
+        }
+
         // Login form
         const loginForm = document.getElementById('login-form');
         if (loginForm) {
             loginForm.addEventListener('submit', this.handleLogin.bind(this));
         }
-        
+
         // Demo login button
         const demoLoginBtn = document.getElementById('demo-login');
         if (demoLoginBtn) {
             demoLoginBtn.addEventListener('click', this.handleDemoLogin.bind(this));
         }
-        
+
         // Logout button
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', this.handleLogout.bind(this));
         }
-        
+
         // Announcement form
         const announcementForm = document.getElementById('create-announcement');
         if (announcementForm) {
             announcementForm.addEventListener('submit', this.handleCreateAnnouncement.bind(this));
         }
-        
+
         // Toggle admin panel (Ctrl + A)
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'a') {
@@ -106,13 +109,16 @@ class DisplaySystem {
                 this.toggleAdminPanel();
             }
         });
-        
+
         // Close modal on outside click
-        document.getElementById('login-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'login-modal') {
-                this.hideLoginModal();
-            }
-        });
+        const loginModal = document.getElementById('login-modal');
+        if (loginModal) {
+            loginModal.addEventListener('click', (e) => {
+                if (e.target.id === 'login-modal') {
+                    this.hideLoginModal();
+                }
+            });
+        }
     }
     
     switchAdminSection(sectionName) {
@@ -265,15 +271,33 @@ class DisplaySystem {
     }
     
     toggleAdminPanel() {
-        if (this.isDisplayMode) {
-            this.showLoginModal();
+        // Affiche ou masque la vue admin en fonction de l'état actuel
+        const displayMode = document.getElementById('display-mode');
+        const adminMode = document.getElementById('admin-mode');
+        if (!displayMode || !adminMode) return;
+
+        if (displayMode.style.display !== 'none') {
+            // Passer en mode admin
+            displayMode.style.display = 'none';
+            adminMode.style.display = 'block';
+            // Arrêter l'affichage si displayManager existe
+            if (window.displayManager) window.displayManager.pause();
         } else {
-            this.hideAdminPanel();
+            // Revenir en mode affichage
+            displayMode.style.display = 'flex';
+            adminMode.style.display = 'none';
+            // Reprendre l'affichage si displayManager existe
+            if (window.displayManager) window.displayManager.resume();
         }
     }
     
     showLoginModal() {
-        document.getElementById('login-modal').style.display = 'block';
+        const modal = document.getElementById('login-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+        } else {
+            console.error('Modal login non trouvé');
+        }
     }
     
     hideLoginModal() {
@@ -439,9 +463,37 @@ class AnnouncementApp {
     }
 
     toggleAdminPanel() {
-        this.toggleDisplayMode();
+        // Affiche ou masque la vue admin en fonction de l'état actuel
+        const displayMode = document.getElementById('display-mode');
+        const adminMode = document.getElementById('admin-mode');
+        if (!displayMode || !adminMode) return;
+
+        if (displayMode.style.display !== 'none') {
+            // Passer en mode admin
+            displayMode.style.display = 'none';
+            adminMode.style.display = 'block';
+            // Arrêter l'affichage si displayManager existe
+            if (window.displayManager) window.displayManager.pause();
+        } else {
+            // Revenir en mode affichage
+            displayMode.style.display = 'flex';
+            adminMode.style.display = 'none';
+            // Reprendre l'affichage si displayManager existe
+            if (window.displayManager) window.displayManager.resume();
+        }
     }
 }
+
+// Fonction pour fermer le modal
+function closeLoginModal() {
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Cette fonction doit être globale
+window.closeLoginModal = closeLoginModal;
 
 // Initialize the system when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

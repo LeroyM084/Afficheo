@@ -11,8 +11,17 @@
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/template-editor.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- jQuery FIRST -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- RoyalSlider CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/royalslider/9.5.9/royalslider.min.css" rel="stylesheet">
+    
+    <!-- RoyalSlider JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/royalslider/9.5.9/jquery.royalslider.min.js"></script>
 </head>
 <body>
     <!-- Mode d'affichage principal -->
@@ -21,7 +30,8 @@
         <header class="display-header">
             <div class="header-left">
                 <div class="campus-info">
-                    <img src="assets/logo-emineo.png" alt="Emineo Education" class="campus-logo">
+                    <!-- Logo corrigé : créer le fichier ou utiliser un placeholder -->
+                    <div class="campus-logo-placeholder">📚</div>
                     <span class="campus-name">Campus Bordeaux</span>
                 </div>
             </div>
@@ -41,23 +51,24 @@
             </div>
         </header>
 
-        <!-- Zone principale d'affichage des annonces -->
+        <!-- Zone principale avec RoyalSlider -->
         <main class="display-main">
-            <div class="announcement-container" id="announcement-container">
-                <!-- Les annonces seront injectées ici par JavaScript -->
-                <div class="loading-screen">
-                    <div class="loading-spinner"></div>
-                    <p>Chargement des annonces...</p>
+            <!-- Container RoyalSlider CORRIGÉ -->
+            <div id="announcement-slider" class="royalSlider rsDefault">
+                <!-- Slide par défaut si pas d'annonces -->
+                <div class="slide-default">
+                    <div class="default-content">
+                        <h1>Bienvenue sur Campus Emineo</h1>
+                        <p>Aucune annonce active pour le moment</p>
+                    </div>
                 </div>
             </div>
             
             <!-- Indicateurs de navigation -->
-            <div class="navigation-indicators" id="navigation-indicators">
-                <!-- Les points de navigation seront générés automatiquement -->
-            </div>
+            <div class="navigation-indicators" id="navigation-indicators"></div>
         </main>
 
-        <!-- Footer avec informations système -->
+        <!-- Footer -->
         <footer class="display-footer">
             <div class="footer-left">
                 <span class="system-status">
@@ -78,274 +89,275 @@
                 </div>
             </div>
         </footer>
-
-        <!-- Notifications d'urgence -->
-        <div class="emergency-notification" id="emergency-notification" style="display: none;">
-            <div class="emergency-content">
-                <div class="emergency-icon">⚠️</div>
-                <div class="emergency-text">
-                    <h2>ANNONCE URGENTE</h2>
-                    <p id="emergency-message"></p>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Interface d'administration (cachée par défaut) -->
-    <div id="admin-mode" class="admin-container" style="display: none;">
-        <!-- Navigation admin -->
-        <nav class="admin-nav">
-            <div class="admin-nav-header">
-                <h2>Administration</h2>
-                <button id="back-to-display" class="btn btn-secondary">
-                    ← Retour à l'affichage
+    <!-- Interface d'administration -->
+    <div id="admin-mode" class="admin-panel" style="display: none;">
+        <!-- Header Admin -->
+        <div class="admin-header">
+            <div class="admin-title">
+                <i class="fas fa-cog"></i>
+                Panneau d'Administration - Campus Emineo
+            </div>
+            <div class="admin-actions">
+                <button class="admin-nav-item" data-section="announcements">
+                    <i class="fas fa-bullhorn"></i> Annonces
+                </button>
+                <button class="admin-nav-item" data-section="templates">
+                    <i class="fas fa-palette"></i> Templates
+                </button>
+                <button class="admin-nav-item" data-section="scheduler">
+                    <i class="fas fa-calendar"></i> Planificateur
+                </button>
+                <button class="admin-nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i> Paramètres
+                </button>
+                <button class="close-admin" onclick="closeAdmin()">
+                    <i class="fas fa-times"></i> Fermer
                 </button>
             </div>
-            
-            <ul class="admin-nav-menu">
-                <li><a href="#" data-section="dashboard" class="active">Tableau de bord</a></li>
-                <li><a href="#" data-section="announcements">Annonces</a></li>
-                <li><a href="#" data-section="templates">Templates</a></li>
-                <li><a href="#" data-section="schools">Écoles</a></li>
-                <li><a href="#" data-section="categories">Catégories</a></li>
-                <li><a href="#" data-section="settings">Paramètres</a></li>
-            </ul>
-            
-            <div class="admin-nav-footer">
-                <button id="logout-btn" class="btn btn-danger">Déconnexion</button>
-            </div>
-        </nav>
+        </div>
 
-        <!-- Contenu admin -->
+        <!-- Contenu Admin (gardez votre contenu existant) -->
         <div class="admin-content">
-            <!-- Dashboard -->
-            <section id="dashboard-section" class="admin-section">
-                <div class="dashboard-header">
-                    <h2>Tableau de bord</h2>
-                    <div class="dashboard-stats">
-                        <div class="stat-card">
-                            <h3 id="total-active-announcements">0</h3>
-                            <p>Annonces actives</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3 id="total-scheduled-announcements">0</h3>
-                            <p>Annonces programmées</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3 id="total-templates">0</h3>
-                            <p>Templates</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-content">
-                    <div class="dashboard-section">
-                        <h3>Annonces récentes</h3>
-                        <div id="recent-announcements-list"></div>
-                    </div>
-                    
-                    <div class="dashboard-section">
-                        <h3>Système</h3>
-                        <div class="system-info">
-                            <div class="system-item">
-                                <span>Dernière mise à jour:</span>
-                                <span id="last-update-time"></span>
-                            </div>
-                            <div class="system-item">
-                                <span>Statut d'affichage:</span>
-                                <span class="status-badge active">Actif</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Gestion des annonces -->
-            <section id="announcements-section" class="admin-section" style="display: none;">
+            <!-- Section Annonces -->
+            <div id="announcements-section" class="admin-section active">
                 <div class="section-header">
-                    <h2>Gestion des annonces</h2>
-                    <button id="create-announcement-btn" class="btn btn-primary">
-                        + Nouvelle annonce
+                    <h2><i class="fas fa-bullhorn"></i> Gestion des Annonces</h2>
+                    <button class="btn btn-primary" onclick="showAddAnnouncementModal()">
+                        <i class="fas fa-plus"></i> Nouvelle Annonce
                     </button>
                 </div>
-                
-                <!-- Filtres -->
-                <div class="filters-bar">
-                    <select id="filter-school">
-                        <option value="">Toutes les écoles</option>
-                    </select>
-                    <select id="filter-category">
-                        <option value="">Toutes les catégories</option>
-                    </select>
-                    <select id="filter-status">
-                        <option value="">Tous les statuts</option>
-                        <option value="active">Actif</option>
-                        <option value="scheduled">Programmé</option>
-                        <option value="expired">Expiré</option>
-                    </select>
-                    <button id="apply-filters" class="btn btn-secondary">Appliquer</button>
-                </div>
-                
-                <div class="announcements-list" id="announcements-list">
-                    <!-- Les annonces seront chargées ici -->
-                </div>
-            </section>
 
-            <!-- Gestion des templates -->
-            <section id="templates-section" class="admin-section" style="display: none;">
+                <!-- Tableau des annonces -->
+                <div class="table-container">
+                    <table class="admin-table" id="announcements-table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Statut</th>
+                                <th>Priorité</th>
+                                <th>Template</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Contenu généré dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section Templates -->
+            <div id="templates-section" class="admin-section" style="display:none;">
                 <div class="templates-header">
                     <h2>Gestion des Templates</h2>
                     <button class="btn btn-primary" id="create-template-btn">
-                        + Nouveau Template
+                        <i class="icon-plus"></i> Nouveau Template
+                    </button>
+                </div>
+                <!-- Liste des templates existants -->
+                <div class="templates-list">
+                    <h3>Templates Existants</h3>
+                    <div class="templates-grid" id="existing-templates"></div>
+                </div>
+            </div>
+
+            <!-- Section Planificateur -->
+            <div id="scheduler-section" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar"></i> Planificateur</h2>
+                    <button class="btn btn-primary" onclick="addScheduleRule()">
+                        <i class="fas fa-plus"></i> Nouvelle Règle
                     </button>
                 </div>
                 
-                <div class="templates-list">
-                    <h3>Templates Existants</h3>
-                    <div class="templates-grid" id="existing-templates">
-                        <!-- Templates seront chargés ici -->
+                <div class="scheduler-content">
+                    <div class="card">
+                        <h3>Règles de Planification</h3>
+                        <div class="schedule-rules">
+                            <div class="rule-item">
+                                <div class="rule-info">
+                                    <strong>Lundi - Vendredi</strong><br>
+                                    <span class="text-muted">8h00 - 18h00 | Rotation normale</span>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn btn-secondary btn-sm">Modifier</button>
+                                    <button class="btn btn-danger btn-sm">Supprimer</button>
+                                </div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-info">
+                                    <strong>Weekend</strong><br>
+                                    <span class="text-muted">9h00 - 17h00 | Rotation lente</span>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn btn-secondary btn-sm">Modifier</button>
+                                    <button class="btn btn-danger btn-sm">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Autres sections... -->
-            <section id="schools-section" class="admin-section" style="display: none;">
-                <h2>Gestion des écoles</h2>
-                <p>Configuration des écoles du groupe Emineo</p>
-            </section>
-            
-            <section id="categories-section" class="admin-section" style="display: none;">
-                <h2>Gestion des catégories</h2>
-                <p>Configuration des catégories d'annonces</p>
-            </section>
-            
-            <section id="settings-section" class="admin-section" style="display: none;">
-                <h2>Paramètres système</h2>
-                <p>Configuration générale de l'application</p>
-            </section>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <!-- Modal de connexion -->
-    <div id="login-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Connexion Administrateur</h3>
-                <span class="close" id="close-login-modal">&times;</span>
             </div>
-            <form id="login-form" class="modal-body">
-                <div class="form-group">
-                    <label for="username">Nom d'utilisateur:</label>
-                    <input type="text" id="username" required>
+
+            <!-- Section Paramètres -->
+            <div id="settings-section" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Paramètres</h2>
                 </div>
-                <div class="form-group">
-                    <label for="password">Mot de passe:</label>
-                    <input type="password" id="password" required>
+                
+                <div class="settings-content">
+                    <div class="settings-grid">
+                        <div class="card">
+                            <h3>Affichage</h3>
+                            <div class="form-group">
+                                <label for="default-duration">Durée d'affichage par défaut (secondes)</label>
+                                <input type="number" id="default-duration" class="form-control" value="10" min="1" max="300">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="transition-effect">Effet de transition</label>
+                                <select id="transition-effect" class="form-control">
+                                    <option value="fade">Fondu</option>
+                                    <option value="slide">Glissement</option>
+                                    <option value="zoom">Zoom</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-success" onclick="saveDisplaySettings()">
+                                <i class="fas fa-save"></i> Sauvegarder
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Urgences</h3>
+                            <div class="form-group">
+                                <label for="emergency-interval">Intervalle urgences (secondes)</label>
+                                <input type="number" id="emergency-interval" class="form-control" value="30" min="5" max="300">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="emergency-sound"> 
+                                    Son d'alerte pour urgences
+                                </label>
+                            </div>
+                            
+                            <button class="btn btn-success" onclick="saveEmergencySettings()">
+                                <i class="fas fa-save"></i> Sauvegarder
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Système</h3>
+                            <div class="system-info">
+                                <p><strong>Version:</strong> 1.0.0</p>
+                                <p><strong>Dernière mise à jour:</strong> <span id="last-update">--</span></p>
+                                <p><strong>Annonces actives:</strong> <span id="active-count">0</span></p>
+                            </div>
+                            
+                            <div class="system-actions">
+                                <button class="btn btn-secondary" onclick="exportData()">
+                                    <i class="fas fa-download"></i> Exporter les données
+                                </button>
+                                <button class="btn btn-secondary" onclick="importData()">
+                                    <i class="fas fa-upload"></i> Importer les données
+                                </button>
+                                <button class="btn btn-danger" onclick="resetSystem()">
+                                    <i class="fas fa-trash"></i> Réinitialiser
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-actions">
-                    <button type="button" id="demo-login-btn" class="btn btn-secondary">
-                        Connexion démo
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Se connecter
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Modal de création d'annonce -->
+    <!-- Modal d'ajout/modification d'annonce -->
     <div id="announcement-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="announcement-modal-title">Nouvelle annonce</h3>
-                <span class="close" id="close-announcement-modal">&times;</span>
+                <h3 id="modal-title">Nouvelle Annonce</h3>
+                <button class="close-modal" onclick="closeAnnouncementModal()">&times;</button>
             </div>
+            
             <form id="announcement-form" class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="announcement-title">Titre *</label>
-                        <input type="text" id="announcement-title" name="title" required>
+                        <label for="ann-title">Titre *</label>
+                        <input type="text" id="ann-title" class="form-control" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="announcement-priority">Priorité *</label>
-                        <select id="announcement-priority" name="priority" required>
-                            <option value="low">Basse (1)</option>
-                            <option value="normal" selected>Normale (2)</option>
-                            <option value="high">Élevée (3)</option>
-                            <option value="urgent">Urgente (4)</option>
-                            <option value="emergency">Urgence (5)</option>
+                        <label for="ann-template">Template</label>
+                        <select id="ann-template" class="form-control">
+                            <option value="info">Information</option>
+                            <option value="event">Événement</option>
+                            <option value="planning">Planning</option>
+                            <option value="promo">Promotion</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="announcement-content">Contenu *</label>
-                    <textarea id="announcement-content" name="content" rows="4" required></textarea>
+                    <label for="ann-content">Contenu *</label>
+                    <textarea id="ann-content" class="form-control" rows="4" required></textarea>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="announcement-school">École *</label>
-                        <select id="announcement-school" name="school" required>
-                            <option value="sup-de-vinci">Sup de Vinci</option>
-                            <option value="isvm">ISVM</option>
-                            <option value="formasup">Formasup</option>
-                            <option value="apivet">Apivet</option>
+                        <label for="ann-priority">Priorité</label>
+                        <select id="ann-priority" class="form-control">
+                            <option value="low">Faible</option>
+                            <option value="normal" selected>Normale</option>
+                            <option value="high">Élevée</option>
+                            <option value="emergency">Urgence</option>
                         </select>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="announcement-category">Catégorie *</label>
-                        <select id="announcement-category" name="category" required>
-                            <option value="planning">Planning</option>
-                            <option value="event">Événement</option>
-                            <option value="promo">Vidéo promotionnelle</option>
-                            <option value="project">Projet étudiant</option>
-                            <option value="info">Information</option>
+                        <label for="ann-status">Statut</label>
+                        <select id="ann-status" class="form-control">
+                            <option value="active" selected>Actif</option>
+                            <option value="scheduled">Programmé</option>
+                            <option value="inactive">Inactif</option>
                         </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="announcement-template">Template</label>
-                        <select id="announcement-template" name="template">
-                            <option value="basic">Basic</option>
-                            <option value="breaking-news">Breaking News</option>
-                            <option value="event">Événement</option>
-                            <option value="planning">Planning</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="announcement-duration">Durée d'affichage (sec)</label>
-                        <input type="number" id="announcement-duration" name="duration" value="10" min="5" max="60">
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="announcement-start-date">Date de début</label>
-                        <input type="datetime-local" id="announcement-start-date" name="startDate">
+                        <label for="ann-start-date">Date de début</label>
+                        <input type="datetime-local" id="ann-start-date" class="form-control">
                     </div>
+                    
                     <div class="form-group">
-                        <label for="announcement-end-date">Date de fin</label>
-                        <input type="datetime-local" id="announcement-end-date" name="endDate">
+                        <label for="ann-end-date">Date de fin</label>
+                        <input type="datetime-local" id="ann-end-date" class="form-control">
                     </div>
                 </div>
                 
-                <div class="form-actions">
-                    <button type="button" id="cancel-announcement" class="btn btn-secondary">
-                        Annuler
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Sauvegarder
-                    </button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ann-duration">Durée d'affichage (secondes)</label>
+                        <input type="number" id="ann-duration" class="form-control" value="10" min="1" max="300">
+                    </div>
                 </div>
             </form>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAnnouncementModal()">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="saveAnnouncement()">
+                    <i class="fas fa-save"></i> Sauvegarder
+                </button>
+            </div>
         </div>
     </div>
-
     <!-- Modal de l'éditeur de template -->
     <div id="template-editor-modal" class="modal">
         <div class="modal-content template-editor-content">
@@ -355,40 +367,180 @@
             </div>
             
             <div class="template-editor-body">
-                <!-- Contenu de l'éditeur -->
+                <!-- Toolbar -->
+                <div class="template-toolbar">
+                    <div class="toolbar-group">
+                        <h4>Éléments</h4>
+                        <div class="draggable-elements">
+                            <div class="draggable-element" data-type="title"><i class="icon-text"></i><span>Titre</span></div>
+                            <div class="draggable-element" data-type="text"><i class="icon-paragraph"></i><span>Texte</span></div>
+                            <div class="draggable-element" data-type="image"><i class="icon-image"></i><span>Image</span></div>
+                            <div class="draggable-element" data-type="logo"><i class="icon-star"></i><span>Logo École</span></div>
+                            <div class="draggable-element" data-type="date"><i class="icon-calendar"></i><span>Date</span></div>
+                            <div class="draggable-element" data-type="category"><i class="icon-tag"></i><span>Catégorie</span></div>
+                            <div class="draggable-element" data-type="divider"><i class="icon-minus"></i><span>Séparateur</span></div>
+                        </div>
+                    </div>
+                    <div class="toolbar-group">
+                        <h4>Layouts Prédéfinis</h4>
+                        <div class="layout-templates">
+                            <div class="layout-option" data-layout="basic"><div class="layout-preview layout-basic-preview"></div><span>Basique</span></div>
+                            <div class="layout-option" data-layout="two-column"><div class="layout-preview layout-two-column-preview"></div><span>2 Colonnes</span></div>
+                            <div class="layout-option" data-layout="header-content"><div class="layout-preview layout-header-content-preview"></div><span>En-tête + Contenu</span></div>
+                            <div class="layout-option" data-layout="full-image"><div class="layout-preview layout-full-image-preview"></div><span>Image Full</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Zone d'édition -->
+                <div class="template-workspace">
+                    <div class="workspace-header">
+                        <div class="workspace-controls">
+                            <button class="btn btn-sm btn-secondary" id="preview-template"><i class="icon-eye"></i> Aperçu</button>
+                            <button class="btn btn-sm btn-secondary" id="clear-canvas"><i class="icon-trash"></i> Vider</button>
+                            <div class="zoom-controls">
+                                <button class="btn btn-sm" id="zoom-out">-</button>
+                                <span id="zoom-level">100%</span>
+                                <button class="btn btn-sm" id="zoom-in">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Canvas de design -->
+                    <div class="design-canvas" id="design-canvas">
+                        <div class="canvas-content" id="canvas-content">
+                            <div class="drop-zone">
+                                <i class="icon-plus"></i>
+                                <p>Glissez des éléments ici ou choisissez un layout</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Panneau de propriétés -->
+                <div class="properties-panel" id="properties-panel">
+                    <h4>Propriétés</h4>
+                    <div class="properties-content" id="properties-content">
+                        <p>Sélectionnez un élément pour voir ses propriétés</p>
+                    </div>
+                </div>
+            </div>
+            <div class="template-editor-footer">
+                <div class="template-info">
+                    <div class="form-group">
+                        <label for="template-name">Nom du template :</label>
+                        <input type="text" id="template-name" class="form-control" placeholder="Mon nouveau template">
+                    </div>
+                    <div class="form-group">
+                        <label for="template-description">Description :</label>
+                        <textarea id="template-description" class="form-control" placeholder="Description du template"></textarea>
+                    </div>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn btn-secondary" id="cancel-template-edit">Annuler</button>
+                    <button class="btn btn-primary" id="save-template">Sauvegarder</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Modal login CORRIGÉ -->
+    <div id="login-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connexion Administration</h3>
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts dans le bon ordre -->
+    <script src="js/template-manager.js"></script>
+    <script src="js/royal-slider-manager.js"></script>
     <script src="js/display-manager.js"></script>
-    <script src="js/announcement-scheduler.js"></script>
-    <script src="js/template-renderer.js"></script>
-    <script src="js/template-editor.js"></script>
-    <script src="js/display-manager.js"></script>
+    <script src="js/template-renderer.js"></script> <!-- AJOUT ICI -->
     <script src="js/admin.js"></script>
     <script src="js/app.js"></script>
-    
-    <!-- Initialisation -->
-<div class="status-bar">
-    <div class="status-progress" id="status-progress"></div>
-</div>
+    <script src="js/template-editor.js"></script>
 
     <script>
-        // Raccourci clavier pour accéder à l'admin
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'a') {
+    $(document).ready(function() {
+        console.log('DOM Ready - Début initialisation');
+
+        // Vérifier jQuery
+        if (typeof $ === 'undefined') {
+            console.error('jQuery non chargé !');
+            return;
+        }
+
+        // Vérifier RoyalSlider
+        if (typeof $.fn.royalSlider === 'undefined') {
+            console.warn('RoyalSlider non disponible - Chargement du CDN...');
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/royalslider/9.5.9/jquery.royalslider.min.js';
+            script.onload = function() {
+                console.log('RoyalSlider chargé depuis CDN');
+                initializeRoyalSlider();
+            };
+            script.onerror = function() {
+                console.warn('Impossible de charger RoyalSlider - Mode fallback');
+                initializeFallbackMode();
+            };
+            document.head.appendChild(script);
+        } else {
+            console.log('RoyalSlider disponible');
+            initializeRoyalSlider();
+        }
+
+        function initializeRoyalSlider() {
+            if (window.royalSliderManager) {
+                royalSliderManager.init().then(() => {
+                    console.log('RoyalSlider Manager initialisé');
+                    loadInitialData();
+                }).catch(error => {
+                    console.error('Erreur initialisation RoyalSlider:', error);
+                    initializeFallbackMode();
+                });
+            }
+        }
+
+        function initializeFallbackMode() {
+            console.log('Mode fallback activé - DisplayManager simple');
+            // DisplayManager est déjà initialisé automatiquement
+        }
+
+        function loadInitialData() {
+            // Charger les annonces existantes
+            const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+            if (window.royalSliderManager) {
+                royalSliderManager.loadAnnouncements(announcements);
+            }
+            // Rafraîchir les templates
+            if (window.templateManager) {
+                templateManager.renderTemplatesGrid();
+            }
+        }
+
+        // Touche pour admin (Ctrl + Shift + A)
+        $(document).keydown(function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
                 e.preventDefault();
-                if (window.app) {
-                    window.app.toggleAdminPanel();
+                if (window.displaySystem) {
+                    displaySystem.toggleAdminPanel();
                 }
             }
         });
-
-        // Initialisation de l'application
-        document.addEventListener('DOMContentLoaded', function() {
-            window.app = new AnnouncementApp();
-        });
+    });
     </script>
 </body>
 </html>
